@@ -8,22 +8,25 @@ app.use(cors());
 
 app.get("/api/speakers", async (req, res) => {
   try {
-    const { data } = await axios.get("https://slush.org/audience/speakers");
+    const url = "https://slush.org/audience/speakers";
+    const { data } = await axios.get(url);
     const $ = cheerio.load(data);
+
     const speakers = [];
 
-    $(".speaker-card").each((_, el) => {
-      const name = $(el).find(".name").text().trim();
-      const bio = $(el).find(".bio").text().trim();
-      let img = $(el).find("img").attr("src");
-      if (img && !img.startsWith("http"))
-        img = "https://slush.org/audience/speakers" + img;
-      speakers.push({ name, bio, img });
+    $(".team_item-copy").each((_, el) => {
+      const name = $(el)
+        .find(".text-size-large.text-weight-medium")
+        .text()
+        .trim();
+      const img = $(el).find("img.speaker_image").attr("src");
+      if (name && img) speakers.push({ name, img });
     });
 
     res.json(speakers);
   } catch (err) {
-    res.status(500).json({ error: "Parsing error", details: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Parsing failed" });
   }
 });
 
