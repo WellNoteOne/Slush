@@ -1,0 +1,16 @@
+body {
+  background-color: #18181a;
+  font-family: Bebas Neue, Arial, sans-serif;
+}
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+#nameinp {
+  margin: 10px;
+  width: 200px;
+}
+.input-cont {
+  margin: 10px;
+}
