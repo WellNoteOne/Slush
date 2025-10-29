@@ -8,7 +8,7 @@ app.use(cors());
 
 app.get("/api/speakers", async (req, res) => {
   try {
-    const { data } = await axios.get("https://example.com/speakers");
+    const { data } = await axios.get("https://slush.org/audience/speakers");
     const $ = cheerio.load(data);
     const speakers = [];
 
@@ -16,13 +16,14 @@ app.get("/api/speakers", async (req, res) => {
       const name = $(el).find(".name").text().trim();
       const bio = $(el).find(".bio").text().trim();
       let img = $(el).find("img").attr("src");
-      if (img && !img.startsWith("http")) img = "https://example.com" + img;
+      if (img && !img.startsWith("http"))
+        img = "https://slush.org/audience/speakers" + img;
       speakers.push({ name, bio, img });
     });
 
     res.json(speakers);
   } catch (err) {
-    res.status(500).json({ error: "Ошибка парсинга", details: err.message });
+    res.status(500).json({ error: "Parsing error", details: err.message });
   }
 });
 
