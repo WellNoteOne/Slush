@@ -131,3 +131,14 @@ app.get("/api/speakers", async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server fly on port ${PORT}`));
+
+// --- KEEP SERVER AWAKE ON RENDER ---
+if (process.env.RENDER === "true") {
+  const fetch = (await import("node-fetch")).default;
+
+  setInterval(() => {
+    fetch("https://slush-c3qw.onrender.com/api/speakers")
+      .then(() => console.log("🟢 Keep-alive ping sent"))
+      .catch(() => console.log("⚠️ Keep-alive ping failed"));
+  }, 10 * 60 * 1000);
+}
