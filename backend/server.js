@@ -13,7 +13,7 @@ const MONGO_URI =
   process.env.MONGO_URI ||
   "mongodb+srv://valek99mail_db_user:6WuexPh43uGk21vT@db0ne.46iejf7.mongodb.net/";
 await mongoose.connect(MONGO_URI);
-console.log("✅ Connected to MongoDB");
+console.log("Connected to MongoDB");
 
 function absoluteUrl(href) {
   if (!href) return null;
@@ -92,35 +92,29 @@ async function scrapeSpeakers() {
             }
           } catch (errProfile) {
             console.warn(
-              `⚠️ Не удалось получить профиль ${profileUrl}: ${errProfile.message}`
+              `Not possible to get a profile ${profileUrl}: ${errProfile.message}`
             );
           }
         }
 
         const speakerObj = { name, img, bio, description, profileUrl };
-        // сохраняем в массив для вставки в БД
         speakers.push(speakerObj);
       } catch (errItem) {
-        console.warn(
-          "⚠️ Ошибка при обработке одного элемента:",
-          errItem.message
-        );
+        console.warn("Error:", errItem.message);
       }
     }
 
-    // Обновляем БД: очищаем и вставляем новые
     await Speaker.deleteMany({});
     if (speakers.length) await Speaker.insertMany(speakers);
 
-    console.log(`✅ Обновлено ${speakers.length} спикеров`);
+    console.log(`Updated ${speakers.length} speakers`);
     return { count: speakers.length };
   } catch (err) {
-    console.error("❌ Полный парсинг провалился:", err.message);
+    console.error("Parsing error:", err.message);
     throw err;
   }
 }
 
-// Роут для ручного запуска
 app.get("/api/scrape", async (req, res) => {
   try {
     const result = await scrapeSpeakers();
@@ -130,11 +124,10 @@ app.get("/api/scrape", async (req, res) => {
   }
 });
 
-// API отдаёт из БД
 app.get("/api/speakers", async (req, res) => {
   const speakers = await Speaker.find();
   res.json(speakers);
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server fly on port ${PORT}`));
