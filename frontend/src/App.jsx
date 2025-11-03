@@ -7,7 +7,7 @@ function App() {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/speakers")
+    fetch("https://slush-c3qw.onrender.com/api/speakers")
       .then((res) => res.json())
       .then((data) => setSpeakers(data))
       .catch(console.error);
